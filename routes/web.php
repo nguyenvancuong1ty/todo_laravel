@@ -20,3 +20,5 @@ Route::get('/jobs', [JobController::class, 'index']);
 Route::get('/jobs/create', [JobController::class, 'getCreate']);
 Route::post('/jobs/create', [JobController::class, 'postCreate'])->name('job.postCreate');
 Route::get('/job/update/{id}', [JobController::class, 'show']);
+Route::post('/job/update', [JobController::class, 'edit'])->name('job.postUpdate');
+Route::get('/job/delete/{id}', [JobController::class, 'destroy'])->name('job.destroy');

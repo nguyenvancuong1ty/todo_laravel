@@ -5,13 +5,17 @@
 @section('content')
 <form  method="post" action="{{ route('job.postCreate') }}">
     @csrf
-  <div class="form-group">
+  <div class="form-group" enctype = "multipart-data">
     <label for="title">Title</label>
     <input type="title" class="form-control" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title">
   </div>
   <div class="form-group">
     <label for="descriptions">Descriptions</label>
     <input type="text" class="form-control" id="descriptions" name="descriptions" placeholder="Descriptions">
+  </div>
+  <div class="form-group">
+    <label for="Image">Image</label>
+    <input type="file" class="form-control" id="descriptions" name="image" placeholder="Image">
   </div>
   <button type="submit" class="btn btn-primary mt-4">Submit</button>
   @if ($errors->any())

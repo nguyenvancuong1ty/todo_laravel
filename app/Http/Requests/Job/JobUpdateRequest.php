@@ -22,8 +22,9 @@ class JobUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => 'required|unique:jobs|max:255',
-            "descriptions" => 'require'
-        ];
+            'title' => 'required|max:255',
+            'descriptions' => 'required',
+            'id' => 'required'
+        ];  
     }
 }

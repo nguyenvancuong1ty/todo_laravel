@@ -3,8 +3,11 @@
     Create job
 @endsection
 @section('content')
-<form  method="put" action="">
+<form  method="post" action="{{ route('job.postUpdate') }}">
     @csrf
+  <div class="form-group">
+    <input value ="{{$job->id}}" class="form-control" id="id" name="id" type="hidden">
+  </div>
   <div class="form-group">
     <label for="title">Title</label>
     <input value ="{{$job->title}}" class="form-control" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title">

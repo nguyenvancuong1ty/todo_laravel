@@ -32,6 +32,7 @@ class JobController extends Controller
         $job = new Job();
         $job->title = $validated["title"];
         $job->descriptions = $validated["descriptions"];
+        $job->image = "https://i.pinimg.com/236x/6e/95/73/6e957302b674cb9e7501c0970d9f12eb.jpg";
         $job->save();
 
         session()->flash('success', 'Job created succesfully');
@@ -52,19 +53,20 @@ class JobController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(JobUpdateRequest $request, string $id)
+    public function edit(JobUpdateRequest $request)
     {
         $validated = $request->validated();
-        $job = Job::find((int)$id);
+        $job = Job::find((int)$validated["id"]);
         $job->title = $validated["title"];
         $job->descriptions = $validated["descriptions"];
         $job->save();
+        return redirect('/jobs');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJobRequest $request, Job $job)
+    public function update(Job $job)
     {
         //
     }
@@ -72,8 +74,10 @@ class JobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Job $job)
+    public function destroy(string $id)
     {
-        //
+        $job = Job::find((int)$id);
+        $job->forceDelete();
+        return redirect('/jobs');
     }
 }
