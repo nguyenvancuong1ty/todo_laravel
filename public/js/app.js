@@ -1,24 +1,82 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+$(document).ready(function () {
+    //Get all country when page load
+    $.ajax({
+        url: "https://countriesnow.space/api/v0.1/countries/flag/images",
+        type: "GET",
+        success: function (response) {
+            if (response.error) {
+                $("#inputGroupSelectCountry").append(
+                    '<option value="">Không có thành phố nào</option>'
+                );
+            } else {
+                $.each(response.data, function (index, country) {
+                    $("#inputGroupSelectCountry").append(
+                        '<option value="' +
+                            country.name +
+                            '">' +
+                            country.name +
+                            "</option>"
+                    );
+                });
+            }
+            console.log(response.data); // In ra danh sách các quốc gia trong console
+        },
+        error: function (error) {
+            console.log("Error:", error);
+        },
+    });
+});
 
-/***/ "./resources/js/app.js":
-/*!*****************************!*\
-  !*** ./resources/js/app.js ***!
-  \*****************************/
-/***/ (() => {
+// Get city and generate to input
 
-throw new Error("Module parse failed: 'import' and 'export' may appear only with 'sourceType: module' (1:0)\nFile was processed with these loaders:\n * ./node_modules/babel-loader/lib/index.js\nYou may need an additional loader to handle the result of these loaders.\n> import './bootstrap';");
+$("#inputGroupSelectCountry").change(function () {
+    $("#inputGroupSelectCity").prop("disabled", true);
+    $("#inputGroupSelectCity").html('<option value="">Choose a City</option>');
+    var country = $(this).val();
+    $.ajax({
+        url: "https://countriesnow.space/api/v0.1/countries/cities",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({ country: country }),
+        success: function (response) {
+            if (response.error) {
+                $("#inputGroupSelectCity").append(
+                    $("#inputGroupSelectCity").html(
+                        '<option value="">Không có thành phố nào</option>'
+                    )
+                );
+            } else {
+                $.each(response.data, function (index, city) {
+                    $("#inputGroupSelectCity").append(
+                        '<option value="' + city + '">' + city + "</option>"
+                    );
+                });
+            }
+            console.log(response.data); // In ra danh sách các quốc gia trong console
+        },
+        error: function (error) {
+            console.log("Error:", error);
+        },
+        complete: function () {
+            // Re-enable input after data is loaded (whether success or error)
+            $("#inputGroupSelectCity").prop("disabled", false);
+        },
+    });
+});
 
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./resources/js/app.js"]();
-/******/ 	
-/******/ })()
-;
+//Date picker register auth
+$(function () {
+    $("#authRegisterBirthday").daterangepicker(
+        {
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format("YYYY"), 10),
+        },
+        function (start, end, label) {
+            var years = moment().diff(start, "years");
+            $("#authRegisterBirthday").val(start);
+        }
+    );
+});

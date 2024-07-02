@@ -32,5 +32,5 @@
             </table>
         </div>
     </div>
-
+<a href="jobs/create" class= "btn btn-primary">Create</a>
 @endsection

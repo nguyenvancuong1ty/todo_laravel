@@ -7,11 +7,11 @@
     @csrf
   <div class="form-group" enctype = "multipart-data">
     <label for="title">Title</label>
-    <input type="title" class="form-control" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title">
+    <input value="{{ old('title') }}" type="title" class="form-control" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title">
   </div>
   <div class="form-group">
     <label for="descriptions">Descriptions</label>
-    <input type="text" class="form-control" id="descriptions" name="descriptions" placeholder="Descriptions">
+    <input value="{{ old('descriptions') }}" type="text" class="form-control" id="descriptions" name="descriptions" placeholder="Descriptions">
   </div>
   <div class="form-group">
     <label for="Image">Image</label>
@@ -28,4 +28,5 @@
     </div>
 @endif
 </form>
+
 @endsection

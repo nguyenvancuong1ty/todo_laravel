@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
+use App\Models\Post;
+use App\Enums\SexEnum;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -21,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'sex',
     ];
 
     /**
@@ -41,5 +45,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'sex' => SexEnum::class,
     ];
+
+    protected $dates = [
+    'birthday',
+    ];
+
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 }
