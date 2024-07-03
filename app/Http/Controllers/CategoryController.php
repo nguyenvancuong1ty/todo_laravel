@@ -3,33 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Service\Category\ICategoryService;
+use App\Http\Requests\category\CreateRequest;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    protected $categoryService;
+
+    public function __construct(ICategoryService $categoryService) {
+        $this->categoryService = $categoryService;
     }
 
+    public function index()
+    {
+        $categories = $this->categoryService->GetPaging(3);
+        return view('category.Index', ['categories'=> $categories]);
+    }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('category.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(CreateRequest $request)
     {
-        //
+        $this->categoryService->Create($request);
+        return redirect()->route('category.Index')->with('success', 'Category created successfully');
     }
 
     /**
@@ -51,7 +58,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update( $request, Category $category)
     {
         //
     }
@@ -59,8 +66,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(string $id)
     {
-        //
+        $count = $this->categoryService->Delete($id);
+        if ($count) {
+            return redirect()->route('category.Index')->with('success', 'Category deleted successfully');
+        } else {
+            return redirect()->route('category.Index')->with('error', 'Category not found or deletion failed');
+        }
     }
 }

@@ -55,7 +55,7 @@
         @endforeach
     </div>
     @if ($errors->any())  
-        <div class= "text-danger">{{ $errors->first('sex'); }}</div>
+        <div   class= "text-danger">{{ $errors->first('sex'); }}</div>
       @endif
   </div>
   <div class=" form-group mb-3 mt-3">

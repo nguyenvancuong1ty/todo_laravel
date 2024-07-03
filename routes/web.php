@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,17 +37,17 @@ Route::group(['prefix' => 'auth'], function () {
 
 //Category Route
 Route::group(['prefix' => 'cg'], function () { 
-    Route::get('/category', [CategoryController::class, 'index']);
-    Route::get('/category/create', [CategoryController::class, 'getCreate']);
-    Route::post('/category/create', [CategoryController::class, 'postCreate'])->name('category.postCreate');
-    Route::get('/category/update/{id}', [CategoryController::class, 'show']);
+    Route::get('/category', [CategoryController::class, 'index'])->name('category.Index'); 
+    Route::get('/category/create', [CategoryController::class, 'create'])->name('category.getCreate');
+    Route::post('/category/create', [CategoryController::class, 'store'])->name('category.postCreate');
+    Route::get('/category/update/{id}', [CategoryController::class, 'show'])->name('category.getUpdate');
     Route::post('/category/update', [CategoryController::class, 'edit'])->name('category.postUpdate');
     Route::get('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 });
 //Post Route
-Route::get('/post', [PostController::class, 'index']);
-Route::get('/post/create', [PostController::class, 'getCreate']);
-Route::post('/post/create', [PostController::class, 'postCreate'])->name('post.postCreate');
-Route::get('/post/update/{id}', [PostController::class, 'show']);
+Route::get('/post/create', [PostController::class, 'create'])->name('post.getCreate');
+Route::post('/post/create', [PostController::class, 'store'])->name('post.postCreate');
+Route::get('/post/update/{id}', [PostController::class, 'show'])->name('post.getUpdate');
 Route::post('/post/update', [PostController::class, 'edit'])->name('post.postUpdate');
 Route::get('/post/delete/{id}', [PostController::class, 'destroy'])->name('post.destroy');
+Route::get('/post/{status}', [PostController::class, 'index'])->name('post.index');

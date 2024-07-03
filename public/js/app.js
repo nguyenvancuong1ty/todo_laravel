@@ -80,3 +80,22 @@ $(function () {
         }
     );
 });
+
+//Status post change
+
+// $("#inputGroupSelectStatus").change(function () {
+//     var status = $(this).val();
+//     var url = '{{ route("post.index", ":status") }}';
+//     url = url.replace(":status", status);
+//     $.ajax({
+//         url: url,
+//         type: "get",
+//         success: function (response) {
+//             $(".table tbody").html(response);
+//         },
+//         error: function (error) {
+//             console.log("Error:", error);
+//         },
+//         complete: function () {},
+//     });
+// });
