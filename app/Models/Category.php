@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Enums\StatusEnum;
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Category extends Model
 {
     use HasFactory;

@@ -20,6 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//mail
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
 //Job Route
 Route::get('/jobs', [JobController::class, 'index']);
 Route::get('/jobs/create', [JobController::class, 'getCreate']);
@@ -28,11 +33,15 @@ Route::get('/job/update/{id}', [JobController::class, 'show']);
 Route::post('/job/update', [JobController::class, 'edit'])->name('job.postUpdate');
 Route::get('/job/delete/{id}', [JobController::class, 'destroy'])->name('job.destroy');
 
+
 //User Route
 Route::group(['prefix' => 'auth'], function () {
+    Route::get('/login',[UserController::class, 'getLogin'])->name("auth.getLogin")->withoutMiddleware('auth');
+    Route::post('/login',[UserController::class, 'postLogin'])->name("auth.postLogin")->withoutMiddleware('auth');;
     Route::get('/user/all',[UserController::class, 'index'])->name("auth.listUses");
     Route::get('/register',[UserController::class, 'getRegister'])->name("auth.getRegister");
     Route::post('/register',[UserController::class, 'postRegister'])->name("auth.postRegister");
+    Route::post('/logout',[UserController::class, 'postLogout'])->name("auth.postLogout");
 });
 
 //Category Route
@@ -44,6 +53,7 @@ Route::group(['prefix' => 'cg'], function () {
     Route::post('/category/update', [CategoryController::class, 'edit'])->name('category.postUpdate');
     Route::get('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 });
+
 //Post Route
 Route::get('/post/create', [PostController::class, 'create'])->name('post.getCreate');
 Route::post('/post/create', [PostController::class, 'store'])->name('post.postCreate');
@@ -51,3 +61,8 @@ Route::get('/post/update/{id}', [PostController::class, 'show'])->name('post.get
 Route::post('/post/update', [PostController::class, 'edit'])->name('post.postUpdate');
 Route::get('/post/delete/{id}', [PostController::class, 'destroy'])->name('post.destroy');
 Route::get('/post/{status}', [PostController::class, 'index'])->name('post.index');
+
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->name('verification.notice');

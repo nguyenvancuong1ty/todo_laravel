@@ -2,6 +2,7 @@
     "private": true,
     "type": "commonjs",
     "scripts": {
+        "start": "php artisan serve --port=8001",
         "dev": "vite",
         "build": "vite build",
         "watch": "npx mix watch"

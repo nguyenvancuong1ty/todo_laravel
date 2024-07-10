@@ -11,15 +11,24 @@ use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Post;
 use App\Enums\SexEnum;
-class User extends Authenticatable
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject,MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+    
     protected $fillable = [
         'name',
         'email',
@@ -53,8 +62,19 @@ class User extends Authenticatable
     ];
 
 
-    public function posts(): HasMany
+    public function getJWTIdentifier()
     {
-        return $this->hasMany(Post::class);
+        return $this->getKey();
     }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+   
 }

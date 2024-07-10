@@ -52,6 +52,12 @@ return [
     */
 
     'channels' => [
+        'all' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/all_log.log'),
+        'level' => 'info',
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

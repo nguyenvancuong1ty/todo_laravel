@@ -1,83 +1,68 @@
 $(document).ready(function () {
     //Get all country when page load
     $.ajax({
-        url: "https://countriesnow.space/api/v0.1/countries/flag/images",
-        type: "GET",
+        url: 'https://countriesnow.space/api/v0.1/countries/flag/images',
+        type: 'GET',
         success: function (response) {
             if (response.error) {
-                $("#inputGroupSelectCountry").append(
-                    '<option value="">Không có thành phố nào</option>'
-                );
+                $('#inputGroupSelectCountry').append('<option value="">Không có thành phố nào</option>');
             } else {
                 $.each(response.data, function (index, country) {
-                    $("#inputGroupSelectCountry").append(
-                        '<option value="' +
-                            country.name +
-                            '">' +
-                            country.name +
-                            "</option>"
-                    );
+                    $('#inputGroupSelectCountry').append('<option value="' + country.name + '">' + country.name + '</option>');
                 });
             }
-            console.log(response.data); // In ra danh sách các quốc gia trong console
         },
         error: function (error) {
-            console.log("Error:", error);
+            console.log('Error:', error);
         },
     });
 });
 
 // Get city and generate to input
 
-$("#inputGroupSelectCountry").change(function () {
-    $("#inputGroupSelectCity").prop("disabled", true);
-    $("#inputGroupSelectCity").html('<option value="">Choose a City</option>');
+$('#inputGroupSelectCountry').change(function () {
+    $('#inputGroupSelectCity').prop('disabled', true);
+    $('#inputGroupSelectCity').html('<option value="">Choose a City</option>');
     var country = $(this).val();
     $.ajax({
-        url: "https://countriesnow.space/api/v0.1/countries/cities",
-        type: "POST",
-        contentType: "application/json",
-        dataType: "json",
+        url: 'https://countriesnow.space/api/v0.1/countries/cities',
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
         data: JSON.stringify({ country: country }),
         success: function (response) {
             if (response.error) {
-                $("#inputGroupSelectCity").append(
-                    $("#inputGroupSelectCity").html(
-                        '<option value="">Không có thành phố nào</option>'
-                    )
-                );
+                $('#inputGroupSelectCity').append($('#inputGroupSelectCity').html('<option value="">Không có thành phố nào</option>'));
             } else {
                 $.each(response.data, function (index, city) {
-                    $("#inputGroupSelectCity").append(
-                        '<option value="' + city + '">' + city + "</option>"
-                    );
+                    $('#inputGroupSelectCity').append('<option value="' + city + '">' + city + '</option>');
                 });
             }
             console.log(response.data); // In ra danh sách các quốc gia trong console
         },
         error: function (error) {
-            console.log("Error:", error);
+            console.log('Error:', error);
         },
         complete: function () {
             // Re-enable input after data is loaded (whether success or error)
-            $("#inputGroupSelectCity").prop("disabled", false);
+            $('#inputGroupSelectCity').prop('disabled', false);
         },
     });
 });
 
 //Date picker register auth
 $(function () {
-    $("#authRegisterBirthday").daterangepicker(
+    $('#authRegisterBirthday').daterangepicker(
         {
             singleDatePicker: true,
             showDropdowns: true,
             minYear: 1901,
-            maxYear: parseInt(moment().format("YYYY"), 10),
+            maxYear: parseInt(moment().format('YYYY'), 10),
         },
         function (start, end, label) {
-            var years = moment().diff(start, "years");
-            $("#authRegisterBirthday").val(start);
-        }
+            var years = moment().diff(start, 'years');
+            $('#authRegisterBirthday').val(start);
+        },
     );
 });
 
@@ -99,3 +84,8 @@ $(function () {
 //         complete: function () {},
 //     });
 // });
+
+//modal
+$(document).ready(function () {
+    $('#errorModal').modal('show');
+});

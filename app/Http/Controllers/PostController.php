@@ -50,7 +50,7 @@ class PostController extends Controller
     public function store(CreateRequest $request)
     {
         $this->postService->Create($request);
-        return redirect()->route('post.Index', 'active')->with('success', 'Category created successfully');
+        return redirect()->route('post.index', 'active')->with('success', 'Category created successfully');
     }
 
     /**
@@ -72,7 +72,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update( Post $post)
     {
         //
     }

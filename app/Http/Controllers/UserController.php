@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\user\LoginRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\user\RegisterRequest;
 
 use App\Service\User\IUserService;
+use Illuminate\Support\Facades\Cookie;
 
 class UserController extends Controller
 {
@@ -28,49 +30,21 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function getLogin()
     {
-        //
+        return view('user/login');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePostRequest $request)
+    public function postLogin(LoginRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePostRequest $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
+        $data = $this->userService->Login($request);
+        if(!$data) {
+            session()->flash('error', 'Email or password incorrect!');
+            return redirect()->back();
+        }
+        Cookie::queue('jwt_token', $data, 60);
+        session()->flash('success', 'Login success...');
+        return redirect('/cg/category');
     }
 
     public function getRegister()
@@ -82,5 +56,12 @@ class UserController extends Controller
     {
         $this->userService->Register($request);
         return redirect('/auth/user/all');
+    }
+    
+
+    public function postLogout() {
+        $this->userService->Logout();    
+        session()->flash('success', "Logout success"); 
+        return redirect('/auth/login');
     }
 }
