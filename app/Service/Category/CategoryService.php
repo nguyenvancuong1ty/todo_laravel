@@ -19,6 +19,10 @@ class CategoryService implements ICategoryService {
         $categories = Category::all();
         return $categories;
     }
+
+    /**
+     * @ov
+     */
     public function GetPaging($limit) {
         $categories = Category::paginate((int)$limit);
         return $categories;

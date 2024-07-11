@@ -15,7 +15,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject,MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
     public function posts(): HasMany
@@ -34,6 +34,11 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
         'email',
         'password',
         'sex',
+        'birthday',
+        'country',
+        'city',
+        'district',
+        'address'
     ];
 
     /**
@@ -62,19 +67,19 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     ];
 
 
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
+    // public function getJWTIdentifier()
+    // {
+    //     return $this->getKey();
+    // }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
+    // /**
+    //  * Return a key value array, containing any custom claims to be added to the JWT.
+    //  *
+    //  * @return array
+    //  */
+    // public function getJWTCustomClaims()
+    // {
+    //     return [];
+    // }
    
 }

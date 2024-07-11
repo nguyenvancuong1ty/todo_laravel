@@ -4,24 +4,26 @@ use App\Service\User\IUserService;
 use App\Models\User;
 use App\Enums\SexEnum;
 use Carbon\Carbon;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
 
 class UserService implements IUserService {
     public function Register($request) {
         $validated = $request->validated();
-        $newUser = new User();
-        $newUser->name = $validated["name"];
-        $newUser->email = $validated["email"];
-        $newUser->birthday = Carbon::parse($validated["birthday"])->toDateTimeString();
-        $newUser->password = bcrypt($validated["password"]);
-        $newUser->country = $validated["country"];
-        $newUser->city = $validated["city"];
-        $newUser->district = $validated["city"];
         $sexValue = strtolower($validated["sex"]);
-        $newUser->sex = SexEnum::from($sexValue)->value;
-        $newUser->address = $validated["city"]."-".$validated["country"];
-        $newUser->save();
+        $newUser = User::create([
+            'name' => $validated["name"],
+            'email' => $validated["email"],
+            'birthday' => Carbon::parse($validated["birthday"])->toDateTimeString(),
+            'password' => bcrypt($validated["password"]),
+            'country' => $validated["country"],
+            'city' => $validated["city"],
+            'district' => $validated["city"],
+            'sex' => SexEnum::from($sexValue)->value,
+            'address' => $validated["city"]."-".$validated["country"] || "Canada",
+        ]);
+        return $newUser;   
     }
 
     public function GetAll() {

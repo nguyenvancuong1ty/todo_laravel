@@ -5,6 +5,9 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SendMailController;
+use App\Http\Controllers\VerificationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,15 +18,23 @@ use App\Http\Controllers\PostController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/access-denied', function()  {
+    return view('error.access_denied');
+})->name('error.access.denied')->middleware('auth'); 
+
+Route::get('/send-mail', [SendMailController::class, 'index']);
+Route::get('mail/very_success', function() {return view('mail/very_success');})->name('mail.very_success');
+
 //mail
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+Route::controller(VerificationController::class)->group(function() {
+    Route::get('/email/verify', 'notice')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', 'verify')->name('verification.verify');
+    Route::post('/email/resend', 'resend')->name('verification.resend');
+});
 
 //Job Route
 Route::get('/jobs', [JobController::class, 'index']);
@@ -37,11 +48,11 @@ Route::get('/job/delete/{id}', [JobController::class, 'destroy'])->name('job.des
 //User Route
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login',[UserController::class, 'getLogin'])->name("auth.getLogin")->withoutMiddleware('auth');
-    Route::post('/login',[UserController::class, 'postLogin'])->name("auth.postLogin")->withoutMiddleware('auth');;
+    Route::post('/login',[UserController::class, 'postLogin'])->name("auth.postLogin")->withoutMiddleware('auth');
     Route::get('/user/all',[UserController::class, 'index'])->name("auth.listUses");
-    Route::get('/register',[UserController::class, 'getRegister'])->name("auth.getRegister");
-    Route::post('/register',[UserController::class, 'postRegister'])->name("auth.postRegister");
-    Route::post('/logout',[UserController::class, 'postLogout'])->name("auth.postLogout");
+    Route::get('/register',[UserController::class, 'getRegister'])->name("auth.getRegister")->withoutMiddleware('auth');
+    Route::post('/register',[UserController::class, 'postRegister'])->name("auth.postRegister")->withoutMiddleware('auth');
+    Route::post('/logout',[UserController::class, 'postLogout'])->name("auth.postLogout")->withoutMiddleware('auth');
 });
 
 //Category Route
@@ -54,15 +65,11 @@ Route::group(['prefix' => 'cg'], function () {
     Route::get('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 });
 
-//Post Route
-Route::get('/post/create', [PostController::class, 'create'])->name('post.getCreate');
-Route::post('/post/create', [PostController::class, 'store'])->name('post.postCreate');
-Route::get('/post/update/{id}', [PostController::class, 'show'])->name('post.getUpdate');
-Route::post('/post/update', [PostController::class, 'edit'])->name('post.postUpdate');
-Route::get('/post/delete/{id}', [PostController::class, 'destroy'])->name('post.destroy');
-Route::get('/post/{status}', [PostController::class, 'index'])->name('post.index');
+//Post Route 
+Route::get('/post/create', [PostController::class, 'create'])->name('post.getCreate')->middleware('verified');
+Route::post('/post/create', [PostController::class, 'store'])->name('post.postCreate')->middleware('verified');
+Route::get('/post/update/{id}', [PostController::class, 'show'])->name('post.getUpdate')->middleware('verified');
+Route::post('/post/update', [PostController::class, 'edit'])->name('post.postUpdate')->middleware('verified');
+Route::get('/post/delete/{id}', [PostController::class, 'destroy'])->name('post.destroy')->middleware('verified');
+Route::get('/post/{status}', [PostController::class, 'index'])->name('post.index')->middleware('verified');
 
-
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->name('verification.notice');

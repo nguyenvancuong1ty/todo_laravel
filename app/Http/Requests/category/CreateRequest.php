@@ -11,6 +11,7 @@ class CreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        $user = $this->user()->getKey();
         return true;
     }
 

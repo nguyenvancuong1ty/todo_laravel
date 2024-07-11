@@ -7,17 +7,22 @@ use Illuminate\Http\Request;
 use App\Http\Requests\user\RegisterRequest;
 
 use App\Service\User\IUserService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
 class UserController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */
     protected  $userService;
 
+
     public function __construct(IUserService $userService)
     {
+        $this->middleware('auth');
         $this->userService = $userService;
     }
 
@@ -54,8 +59,12 @@ class UserController extends Controller
 
     public function postRegister(RegisterRequest $request)
     {
-        $this->userService->Register($request);
-        return redirect('/auth/user/all');
+        $newUser = $this->userService->Register($request);
+        event(new Registered($newUser));
+        $credentials = $request->only('email', 'password');
+        Auth::attempt($credentials);
+        $request->session()->regenerate();
+        return redirect()->route('verification.notice');
     }
     
 
